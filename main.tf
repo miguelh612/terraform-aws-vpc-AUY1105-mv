@@ -1,4 +1,3 @@
-# ─── VPC ───────────────────────────────────────────────────────────────────────
 resource "aws_vpc" "main" {
   cidr_block           = var.vpc_cidr
   enable_dns_support   = true
@@ -10,7 +9,6 @@ resource "aws_vpc" "main" {
   }
 }
 
-# ─── SUBNETS ───────────────────────────────────────────────────────────────────
 resource "aws_subnet" "public" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = var.public_subnet_cidr[0]
@@ -22,7 +20,6 @@ resource "aws_subnet" "public" {
   }
 }
 
-# Segunda subred pública requerida por el ALB (mínimo 2 AZs)
 resource "aws_subnet" "public_2" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = var.public_subnet_cidr[1]
@@ -44,7 +41,6 @@ resource "aws_subnet" "private" {
   }
 }
 
-# ─── INTERNET GATEWAY ──────────────────────────────────────────────────────────
 resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
 
@@ -53,7 +49,6 @@ resource "aws_internet_gateway" "main" {
   }
 }
 
-# ─── ROUTE TABLE ───────────────────────────────────────────────────────────────
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
 
