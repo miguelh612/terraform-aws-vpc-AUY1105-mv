@@ -1,11 +1,11 @@
 # ─── VPC ───────────────────────────────────────────────────────────────────────
 resource "aws_vpc" "main" {
-  cidr_block           = "10.0.0.0/16"
+  cidr_block           = var.vpc_cidr
   enable_dns_support   = true
   enable_dns_hostnames = true
 
   tags = {
-    Name        = "vpc-prueba2"
+    Name        = var.vpc_name
     Environment = "dev"
   }
 }
@@ -13,34 +13,34 @@ resource "aws_vpc" "main" {
 # ─── SUBNETS ───────────────────────────────────────────────────────────────────
 resource "aws_subnet" "public" {
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = "10.0.1.0/24"
-  availability_zone       = "us-east-1a"
+  cidr_block              = var.public_subnet_cidr[0]
+  availability_zone       = var.availability_zone[0]
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "subnet-public-1a"
+    Name = var.subnet_name[0]
   }
 }
 
 # Segunda subred pública requerida por el ALB (mínimo 2 AZs)
 resource "aws_subnet" "public_2" {
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = "10.0.3.0/24"
-  availability_zone       = "us-east-1b"
+  cidr_block              = var.public_subnet_cidr[1]
+  availability_zone       = var.availability_zone[1]
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "subnet-public-1b"
+    Name = var.subnet_name[1]
   }
 }
 
 resource "aws_subnet" "private" {
   vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.2.0/24"
-  availability_zone = "us-east-1b"
+  cidr_block        = var.private_subnet_cidr
+  availability_zone = var.availability_zone[1]
 
   tags = {
-    Name = "subnet-private"
+    Name = var.subnet_name[2]
   }
 }
 
